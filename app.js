@@ -12,10 +12,32 @@ const app = express();
 
 // connect to database
 // Local database, because lazy
-mongoose.connect("mongodb://localhost:27017/node_auth", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+// mongoose.connect("mongodb://localhost/node_auth", {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+
+mongoose
+  .connect("mongodb://localhost/node_auth")
+  .then(() => {
+    console.log("Connected to Database");
+  })
+  .catch((err) => {
+    console.log("Not Connected to Database ERROR! ", err);
+  });
+
+const UserSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    require: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
 });
+
+const User = mongoose.model("user", UserSchema);
 
 // handlebars
 app.engine("hbs", hbs.engine({ extname: ".hbs" }));
@@ -32,3 +54,52 @@ app.use(
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+// passport stuff
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  // setup user model
+  User.findById(id, (err, user) => {
+    done(err, user);
+  });
+});
+
+passport.use(
+  new localStrategy(function (username, password, done) {
+    User.findOne({ username: username }, (err, user) => {
+      if (err) {
+        return done(err);
+      }
+      if (!user) {
+        return done(null, false, { message: "Incorrect Username" });
+      }
+      bcrypt.compare(password, user.password, (err, res) => {
+        if (err) {
+          return done(err);
+        }
+        if (res === false) {
+          return done(null, false, { message: "Incorrect password" });
+        }
+        return done(null, user);
+      });
+    });
+  })
+);
+
+app.get("/", (req, res) => {
+  res.render("index", { title: "Home" });
+});
+
+app.listen(8080, () => {
+  console.log("App listening on port 8080");
+});
+
+// 20:12
+
+// https://www.youtube.com/watch?v=W5Tb1MIeg-I
