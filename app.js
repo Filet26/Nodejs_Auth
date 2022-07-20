@@ -93,6 +93,10 @@ passport.use(
   })
 );
 
+app.get("/login", (req, res) => {
+  res.render("login", { title: "Login" });
+});
+
 app.get("/", (req, res) => {
   res.render("index", { title: "Home" });
 });
