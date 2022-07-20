@@ -44,6 +44,7 @@ app.engine("hbs", hbs.engine({ extname: ".hbs" }));
 app.set("view engine", "hbs");
 app.use(express.static(__dirname + "/public"));
 // use env variables in prod env
+
 app.use(
   session({
     secret: "supersecret",
@@ -99,7 +100,3 @@ app.get("/", (req, res) => {
 app.listen(8080, () => {
   console.log("App listening on port 8080");
 });
-
-// 20:12
-
-// https://www.youtube.com/watch?v=W5Tb1MIeg-I

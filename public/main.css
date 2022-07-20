@@ -1,0 +1,38 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  background-color: rgb(0, 0, 0);
+  color: white;
+  background-image: linear-gradient(to bottom, #06beb6 10%, #48b1bf);
+}
+
+.app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+}
+
+a {
+  color: wheat;
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(207, 158, 68);
+}
+
+.home {
+  width: 100%;
+  max-width: 400px;
+  padding: 50px 30px;
+  background-color: rgb(0, 0, 0);
+  border-radius: 16px;
+  text-align: center;
+}
